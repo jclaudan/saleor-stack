@@ -2,7 +2,7 @@ version: "3.4"
 
 services:
   api:
-    image: ghcr.io/saleor/saleor:3.19
+    image: ghcr.io/saleor/saleor:3.20
     ports:
       - 8000:8000
     restart: unless-stopped
@@ -32,7 +32,7 @@ services:
       - saleor-backend-tier
 
   db:
-    image: library/postgres:13-alpine
+    image: library/postgres:15-alpine
     ports:
       - 5432:5432
     restart: unless-stopped
@@ -47,7 +47,7 @@ services:
       - POSTGRES_PASSWORD=saleor
 
   db-init:
-    image: ghcr.io/saleor/saleor:3.19
+    image: ghcr.io/saleor/saleor:3.20
     env_file:
       - .env
     entrypoint: sh -c "python3 manage.py migrate && python3 manage.py createsuperuser --noinput || echo 'User admin already exists'"
@@ -68,7 +68,7 @@ services:
       - ./redis-data:/data
 
   worker:
-    image: ghcr.io/saleor/saleor:3.19
+    image: ghcr.io/saleor/saleor:3.20
     command: celery -A saleor --app=saleor.celeryconf:app worker --loglevel=info -B
     restart: unless-stopped
     networks:
